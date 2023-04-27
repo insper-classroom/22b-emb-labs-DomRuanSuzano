@@ -5,30 +5,11 @@
 #include "gfx_mono_text.h"
 #include "sysfont.h"
 
-#include "mcu6050.h"
-#include "math.h"
+#define BUT_PLACA_PIO     PIOA
+#define BUT_PLACA_PIO_ID  ID_PIOA
+#define BUT_PLACA_PIO_PIN 11
+#define BUT_PLACA_PIO_PIN_MASK (1 << BUT_PLACA_PIO_PIN)
 
-#include "fusion/Fusion.h"
-
-#define LED_PIO PIOC
-#define LED_PIO_ID ID_PIOC
-#define LED_PIO_IDX 8
-#define LED_IDX_MASK (1 << LED_PIO_IDX)
-
-#define LED1_PIO            PIOA
-#define LED1_PIO_ID         ID_PIOA
-#define LED1_PIO_IDX        0
-#define LED1_PIO_IDX_MASK  (1 << LED1_PIO_IDX)
-
-#define LED2_PIO            PIOC
-#define LED2_PIO_ID         ID_PIOC
-#define LED2_PIO_IDX        30
-#define LED2_PIO_IDX_MASK  (1 << LED2_PIO_IDX)
-
-#define LED3_PIO            PIOB
-#define LED3_PIO_ID         ID_PIOB
-#define LED3_PIO_IDX        2
-#define LED3_PIO_IDX_MASK  (1 << LED3_PIO_IDX)
 
 /** RTOS  */
 #define TASK_IMU_STACK_SIZE                (1024*6/sizeof(portSTACK_TYPE))

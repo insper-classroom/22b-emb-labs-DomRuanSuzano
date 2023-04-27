@@ -1,9 +1,18 @@
 #include "conf_board.h"
 #include <asf.h>
 
+#include "gfx_mono_ug_2832hsweg04.h"
+#include "gfx_mono_text.h"
+#include "sysfont.h"
+
 /************************************************************************/
 /* BOARD CONFIG                                                         */
 /************************************************************************/
+
+#define BUT_PLACA_PIO     PIOA
+#define BUT_PLACA_PIO_ID  ID_PIOA
+#define BUT_PLACA_PIO_PIN 11
+#define BUT_PLACA_PIO_PIN_MASK (1 << BUT_PLACA_PIO_PIN)
 
 #define USART_COM_ID ID_USART1
 #define USART_COM USART1
@@ -15,6 +24,9 @@
 /************************************************************************/
 /* RTOS                                                                */
 /************************************************************************/
+
+#define TASK_OLED_STACK_SIZE                (1024*6/sizeof(portSTACK_TYPE))
+#define TASK_OLED_STACK_PRIORITY            (tskIDLE_PRIORITY)
 
 #define TASK_ADC_STACK_SIZE (1024 * 10 / sizeof(portSTACK_TYPE))
 #define TASK_ADC_STACK_PRIORITY (tskIDLE_PRIORITY)
@@ -99,6 +111,25 @@ void vTimerCallback(TimerHandle_t xTimer) {
   /* Selecina canal e inicializa conversão */
   afec_channel_enable(AFEC_POT, AFEC_POT_CHANNEL);
   afec_start_software_conversion(AFEC_POT);
+}
+
+static void task_ajuste(void *pvParameters) {
+	gfx_mono_ssd1306_init();
+	gfx_mono_draw_string("Exemplo RTOS", 0, 0, &sysfont);
+	gfx_mono_draw_string("oii", 0, 20, &sysfont);
+
+	uint32_t cont=0;
+	for (;;)
+	{
+		char buf[3];
+		
+		cont++;
+		
+		sprintf(buf,"%03d",cont);
+		gfx_mono_draw_string(buf, 0, 20, &sysfont);
+		
+		vTaskDelay(1000);
+	}
 }
 
 static void task_adc(void *pvParameters) {
